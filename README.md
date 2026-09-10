@@ -6,7 +6,11 @@ Quick shell scripts for bootstrapping personal dotfiles and dev environment sett
 
 ```sh
 cp .env.example .env
-# edit .env with your name and email
+```
+
+Edit .env file with your name and email
+
+```
 sh configure-git.sh
 ```
 
