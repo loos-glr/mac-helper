@@ -10,7 +10,7 @@
 # die mappen te wijzigen – geen scriptkennis nodig.
 # =============================================================================
 
-REPO_ROOT="${0:A:h:h}"               # Absoluut pad naar de repo-root
+REPO_ROOT="${0:A:h:h}" # Absoluut pad naar de repo-root
 source "$REPO_ROOT/lib/helpers.sh"
 
 TEMPLATES_DIR="$REPO_ROOT/templates" # Map met alle template-projecten
