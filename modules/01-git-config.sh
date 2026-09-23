@@ -13,28 +13,34 @@ source "$REPO_ROOT/lib/helpers.sh"
 
 
 # -----------------------------------------------------------------------------
-# Stap 1 – Probeer bestaande waarden uit .env te lezen (optioneel)
+# Stap 1 – Bepaal naam en e-mail (.env → Git-configuratie)
 # -----------------------------------------------------------------------------
 print_header "Git Configuratie"
 
-DEFAULT_NAME=$(load_env_value "NAME")
-DEFAULT_EMAIL=$(load_env_value "EMAIL")
+DEFAULT_NAME=$(resolve_default "NAME"  "user.name")
+DEFAULT_EMAIL=$(resolve_default "EMAIL" "user.email")
 
+
+# -----------------------------------------------------------------------------
+# Stap 2 – Gebruik bekende waarden of vraag de gebruiker om invoer
+# -----------------------------------------------------------------------------
 if [[ -n "$DEFAULT_NAME" && -n "$DEFAULT_EMAIL" ]]; then
-    print_info "Standaardwaarden gevonden in .env:"
-    echo "         Naam:  ${DEFAULT_NAME}"
-    echo "         Email: ${DEFAULT_EMAIL}"
+    naam="$DEFAULT_NAME"
+    email="$DEFAULT_EMAIL"
+
+    print_info "Naam en e-mail al bekend – invoer overgeslagen."
+    echo "         Naam:  ${naam}"
+    echo "         Email: ${email}"
     echo ""
+    print_info "Later aanpassen? Bewerk .env of gebruik:"
+    echo "         git config --global user.name \"Voornaam Achternaam\""
+    echo "         git config --global user.email \"email@voorbeeld.nl\""
+else
+    read "naam?> Voer je volledige naam in (bijv. Voornaam Achternaam): "
+    read "email>? Voer je (school) e-mailadres in:                    "
 fi
 
-
-# -----------------------------------------------------------------------------
-# Stap 2 – Vraag naam en e-mail aan de gebruiker
-# -----------------------------------------------------------------------------
-read "naam?> Voer je volledige naam in (bijv. Voornaam Achternaam): "
-read "email>? Voer je (school) e-mailadres in:                    "
-
-# Gebruik de .env-waarden als fallback wanneer de gebruiker niets invult
+# Gebruik de standaardwaarden als fallback wanneer de gebruiker niets invult
 naam="${naam:-$DEFAULT_NAME}"
 email="${email:-$DEFAULT_EMAIL}"
 

@@ -22,7 +22,8 @@ dotconfig/
 │   ├── 02-vscode-extensions.sh  # VS Code extensies per leerjaar installeren
 │   ├── 03-ssh-keygen.sh         # Tijdelijke SSH-sleutel voor GitHub
 │   ├── 04-scaffolding.sh        # Snel een HTML- of PHP-project opzetten
-│   └── 05-aliases.sh            # Handige terminal-snelkoppelingen (aliassen)
+│   ├── 05-aliases.sh            # Handige terminal-snelkoppelingen (aliassen)
+│   └── 06-default-browser.sh    # Standaardbrowser instellen op Google Chrome
 ├── templates/                   # Fysieke bestanden voor project-scaffolding
 │   ├── html-basis/              # Template: HTML + CSS + JS
 │   └── php-basis/               # Template: PHP met includes-structuur
@@ -92,7 +93,7 @@ Zo hoef je niet elke keer opnieuw te typen.
    `react-basis/`) en voeg een nieuwe case toe in `04-scaffolding.sh`.
 2. **Nieuwe extensies:** voeg het extensie-ID toe aan de array in
    `02-vscode-extensions.sh`.
-3. **Nieuwe module:** maak een `06-xxx.sh` in `modules/` en voeg een
+3. **Nieuwe module:** maak een `07-xxx.sh` in `modules/` en voeg een
    menu-optie toe in `setup.sh`.
 
 ---
@@ -103,6 +104,8 @@ Zo hoef je niet elke keer opnieuw te typen.
 - **Zsh** (standaard shell op macOS)
 - **Git** (wordt meegeleverd met Xcode Command Line Tools)
 - **VS Code** (voor de extensie-installatie, optioneel)
+- **Homebrew + `duti`** (alleen voor optie 6 – de module installeert dit
+  automatisch als het ontbreekt)
 
 ---
 

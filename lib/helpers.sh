@@ -186,3 +186,21 @@ load_env_value() {
         | head -1 \
         | sed 's/^[^=]*=["'"'"']*//;s/["'"'"']*$//'
 }
+
+
+# -----------------------------------------------------------------------------
+# resolve_default <env_variabele> <git-sleutel>
+#   Bepaalt een standaardwaarde: eerst uit .env, daarna uit de globale
+#   Git-configuratie. Retourneert een lege string als beide niet bestaan.
+#
+#   Gebruik:
+#     email=$(resolve_default "EMAIL" "user.email")
+# -----------------------------------------------------------------------------
+resolve_default() {
+    local waarde
+    waarde=$(load_env_value "$1" 2>/dev/null || true)
+    if [[ -z "$waarde" ]]; then
+        waarde=$(git config --global "$2" 2>/dev/null || true)
+    fi
+    echo "$waarde"
+}

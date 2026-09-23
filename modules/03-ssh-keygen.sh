@@ -25,7 +25,17 @@ readonly SSH_KEY_COMMENT="glr-dev-setup-tijdelijk"
 # -----------------------------------------------------------------------------
 print_header "Tijdelijke SSH Key Genereren"
 
-read "email?> Voer je GitHub e-mailadres in: "
+# Bepaal het e-mailadres: eerst .env, daarna bestaande Git-configuratie
+DEFAULT_EMAIL=$(resolve_default "EMAIL" "user.email")
+
+if [[ -n "$DEFAULT_EMAIL" ]]; then
+    email="$DEFAULT_EMAIL"
+    print_info "E-mailadres al bekend – invoer overgeslagen: ${email}"
+    echo ""
+else
+    read "email?> Voer je GitHub e-mailadres in: "
+fi
+
 validate_non_empty "$email" "E-mailadres"
 
 
