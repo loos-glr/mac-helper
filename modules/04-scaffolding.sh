@@ -1,73 +1,116 @@
 #!/bin/zsh
-
+# =============================================================================
 # Module 4: Project Scaffolding
-# Genereert snel een standaard mappenstructuur.
+#
+# Genereert een standaard mappenstructuur voor een HTML/CSS/JS- of
+# PHP-project. In plaats van bestandsinhoud 'in te bakken' in het script,
+# kopiëren we fysieke template-mappen uit de 'templates/' directory.
+#
+# Studenten kunnen de templates eenvoudig aanpassen door de bestanden in
+# die mappen te wijzigen – geen scriptkennis nodig.
+# =============================================================================
 
-echo "--- Project Scaffolding ---"
-read "projectnaam?> Wat is de naam van je project? (gebruik-geen-spaties): "
+source "${0:A:h:h}/lib/helpers.sh"
 
-TARGET_DIR="$HOME/Desktop/$projectnaam"
-mkdir -p "$TARGET_DIR"
+REPO_ROOT=$(get_repo_root)               # Hoofdmap van deze repository
+TEMPLATES_DIR="$REPO_ROOT/templates"      # Map met alle template-projecten
 
-echo "\nWelk type project wil je aanmaken?"
+
+# -----------------------------------------------------------------------------
+# Hoofdprogramma
+# -----------------------------------------------------------------------------
+print_header "Project Scaffolding"
+
+
+# ------------------------------------------------------------------
+# Stap 1 – Vraag de projectnaam en valideer deze
+# ------------------------------------------------------------------
+read "projectnaam?> Wat is de naam van je project? (gebruik een kebab-case naam zoals 'mijn-app'): "
+
+# Valideer: projectnaam mag niet leeg zijn
+validate_non_empty "$projectnaam" "Projectnaam"
+
+# Valideer: projectnaam mag geen spaties of rare tekens bevatten
+if [[ ! "$projectnaam" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+    print_error "Projectnaam mag alleen letters, cijfers, streepjes (-) en underscores (_) bevatten."
+    print_info "Bijvoorbeeld: 'mijn-eerste-project' of 'opdracht_1'"
+    exit 1
+fi
+
+DOEL_DIR="$HOME/Desktop/$projectnaam"
+
+
+# ------------------------------------------------------------------
+# Stap 2 – Controleer of de doelmap al bestaat
+# ------------------------------------------------------------------
+if check_dir_exists "$DOEL_DIR"; then
+    print_warning "De map '${DOEL_DIR}' bestaat al!"
+    if ! confirm_yes_no "Wil je doorgaan? Bestaande bestanden kunnen overschreven worden."; then
+        print_info "Scaffolding geannuleerd."
+        exit 0
+    fi
+fi
+
+
+# ------------------------------------------------------------------
+# Stap 3 – Vraag het projecttype
+# ------------------------------------------------------------------
+echo "Welk type project wil je aanmaken?"
 echo "1) Basis (HTML, CSS, JS)"
-echo "2) PHP (Basis mappen)"
+echo "2) PHP (met includes-structuur)"
 echo "3) Annuleren"
 echo ""
 
 read "type_keuze?> Typ het nummer van je keuze (1-3): "
 
+
+# ------------------------------------------------------------------
+# Stap 4 – Kopieer het juiste template
+# ------------------------------------------------------------------
 case $type_keuze in
     1)
-        mkdir -p "$TARGET_DIR/css" "$TARGET_DIR/js" "$TARGET_DIR/assets/img"
-        
-        cat <<EOF > "$TARGET_DIR/index.html"
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$projectnaam</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <h1>Welkom bij $projectnaam</h1>
-    <script src="js/script.js"></script>
-</body>
-</html>
-EOF
-        touch "$TARGET_DIR/css/style.css"
-        touch "$TARGET_DIR/js/script.js"
-        
-        echo "\nBasis project succesvol aangemaakt in: $TARGET_DIR"
+        print_info "HTML/CSS/JS-template kopiëren naar ${DOEL_DIR} ..."
+
+        if [[ ! -d "$TEMPLATES_DIR/html-basis" ]]; then
+            print_error "Template 'html-basis' niet gevonden in ${TEMPLATES_DIR}"
+            exit 1
+        fi
+
+        # Kopieer de volledige template-map naar de doelmap
+        cp -R "$TEMPLATES_DIR/html-basis/" "$DOEL_DIR"
+
+        print_success "Basis HTML/CSS/JS-project aangemaakt in: ${DOEL_DIR}"
+        echo ""
+        echo "Structuur:"
+        find "$DOEL_DIR" -not -path '*/.gitkeep' | sed "s|$DOEL_DIR|  .|" | sort
         ;;
+
     2)
-        mkdir -p "$TARGET_DIR/public/css" "$TARGET_DIR/public/js" "$TARGET_DIR/includes"
-        
-        cat <<EOF > "$TARGET_DIR/public/index.php"
-<?php
-// Start van je PHP project
-require_once '../includes/functions.php';
-?>
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <title>$projectnaam - PHP</title>
-</head>
-<body>
-    <h1>PHP Project is live!</h1>
-</body>
-</html>
-EOF
-        touch "$TARGET_DIR/includes/functions.php"
-        
-        echo "\nPHP project succesvol aangemaakt in: $TARGET_DIR"
+        print_info "PHP-template kopiëren naar ${DOEL_DIR} ..."
+
+        if [[ ! -d "$TEMPLATES_DIR/php-basis" ]]; then
+            print_error "Template 'php-basis' niet gevonden in ${TEMPLATES_DIR}"
+            exit 1
+        fi
+
+        # Kopieer de volledige template-map naar de doelmap
+        cp -R "$TEMPLATES_DIR/php-basis/" "$DOEL_DIR"
+
+        print_success "PHP-project aangemaakt in: ${DOEL_DIR}"
+        echo ""
+        echo "Structuur:"
+        find "$DOEL_DIR" -not -path '*/.gitkeep' | sed "s|$DOEL_DIR|  .|" | sort
         ;;
+
     3)
-        echo "Geannuleerd. Er zijn geen bestanden aangemaakt."
+        print_info "Scaffolding geannuleerd. Er zijn geen bestanden aangemaakt."
         ;;
-    *) 
-        echo "Ongeldige keuze. Proces afgebroken."
+
+    *)
+        print_error "Ongeldige keuze (${type_keuze}). Scaffolding afgebroken."
+        exit 1
         ;;
 esac
+
+echo ""
+print_info "Tip: open je project met 'code ${DOEL_DIR}'"

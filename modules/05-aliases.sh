@@ -1,36 +1,99 @@
 #!/bin/zsh
-
+# =============================================================================
 # Module 5: Terminal Aliassen
-# Voegt handige snelkoppelingen toe aan je terminal profiel.
+#
+# Voegt handige snelkoppelingen (aliassen) toe aan ~/.zshrc.
+# Dubbele aliassen worden automatisch overgeslagen, zodat je dit script
+# veilig meerdere keren kunt uitvoeren.
+#
+# Na afloop wordt ~/.zshrc opnieuw ingelezen zodat de aliassen direct
+# beschikbaar zijn in de huidige terminalsessie.
+# =============================================================================
 
-echo "--- Terminal Aliassen Instellen ---"
+source "${0:A:h:h}/lib/helpers.sh"
 
-ZSHRC_FILE="$HOME/.zshrc"
 
-if [ ! -f "$ZSHRC_FILE" ]; then
-    touch "$ZSHRC_FILE"
-fi
+# -----------------------------------------------------------------------------
+# Configuratie – voeg hier je eigen aliassen toe
+# -----------------------------------------------------------------------------
+readonly ZSHRC_FILE="$HOME/.zshrc"
 
+# Git-aliassen
+readonly GIT_ALIASES=(
+    'alias gs="git status"'
+    'alias ga="git add ."'
+    'alias gc="git commit -m"'
+    'alias gp="git push"'
+)
+
+# Navigatie-aliassen
+readonly NAV_ALIASES=(
+    'alias ..="cd .."'
+    'alias desk="cd ~/Desktop"'
+    'alias ll="ls -lah"'
+    'alias c="code ."'
+)
+
+
+# -----------------------------------------------------------------------------
+# add_alias <alias_regel>
+#   Voegt een alias toe aan ~/.zshrc, maar alleen als deze nog niet
+#   voorkomt (voorkomt duplicaten).
+# -----------------------------------------------------------------------------
 add_alias() {
-    local alias_cmd=$1
-    if ! grep -q "$alias_cmd" "$ZSHRC_FILE"; then
-        echo "$alias_cmd" >> "$ZSHRC_FILE"
+    local alias_regel="$1"
+
+    if ! grep -Fxq "$alias_regel" "$ZSHRC_FILE"; then
+        echo "$alias_regel" >> "$ZSHRC_FILE"
+        print_success "Toegevoegd: ${alias_regel}"
+    else
+        print_info "Bestaat al: ${alias_regel} (overgeslagen)"
     fi
 }
 
-echo "Aliassen toevoegen aan .zshrc..."
 
-add_alias 'alias gs="git status"'
-add_alias 'alias ga="git add ."'
-add_alias 'alias gc="git commit -m"'
-add_alias 'alias gp="git push"'
+# -----------------------------------------------------------------------------
+# Hoofdprogramma
+# -----------------------------------------------------------------------------
+print_header "Terminal Aliassen Instellen"
 
-add_alias 'alias ..="cd .."'
-add_alias 'alias desk="cd ~/Desktop"'
-add_alias 'alias ll="ls -lah"'
-add_alias 'alias c="code ."'
+# Zorg dat ~/.zshrc bestaat
+if [[ ! -f "$ZSHRC_FILE" ]]; then
+    print_info "~/.zshrc bestond nog niet – wordt aangemaakt."
+    touch "$ZSHRC_FILE" || {
+        print_error "Kon ~/.zshrc niet aanmaken."
+        exit 1
+    }
+fi
 
-echo "Aliassen zijn toegevoegd!"
-source "$ZSHRC_FILE" 2>/dev/null || true
+print_info "Aliassen toevoegen aan ~/.zshrc..."
 
-echo "Klaar! Typ in het vervolg bijvoorbeeld 'gs' in plaats van 'git status'."
+# Verwerk Git-aliassen
+echo ""
+echo "${BLAUW}Git-aliassen:${GEEN_KLEUR}"
+for alias_regel in "${GIT_ALIASES[@]}"; do
+    add_alias "$alias_regel"
+done
+
+# Verwerk navigatie-aliassen
+echo ""
+echo "${BLAUW}Navigatie-aliassen:${GEEN_KLEUR}"
+for alias_regel in "${NAV_ALIASES[@]}"; do
+    add_alias "$alias_regel"
+done
+
+# Laad ~/.zshrc opnieuw in voor de huidige sessie
+echo ""
+print_info "~/.zshrc opnieuw inlezen..."
+if source "$ZSHRC_FILE" 2>/dev/null; then
+    print_success "Aliassen zijn nu beschikbaar in deze sessie."
+else
+    print_warning "Kon ~/.zshrc niet opnieuw inlezen. Sluit je terminal en open een nieuwe"
+    print_warning "om de aliassen te gebruiken."
+fi
+
+echo ""
+echo "Probeer bijvoorbeeld:"
+echo "  ${GROEN}gs${GEEN_KLEUR}   in plaats van ${GROEN}git status${GEEN_KLEUR}"
+echo "  ${GROEN}desk${GEEN_KLEUR}  in plaats van ${GROEN}cd ~/Desktop${GEEN_KLEUR}"
+echo "  ${GROEN}c .${GEEN_KLEUR}  in plaats van ${GROEN}code .${GEEN_KLEUR}"
