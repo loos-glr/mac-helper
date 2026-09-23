@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "shell-env": {
+      "source": "kriscard/skills",
+      "sourceType": "github",
+      "skillPath": "skills/dotfiles/shell-env/SKILL.md",
+      "computedHash": "32b42f1cb2b5ff8e926abc852477c080a3f048b4a58d9b9172b6fc47b3546ca6"
+    }
+  }
+}
