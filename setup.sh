@@ -59,8 +59,9 @@ toon_menu() {
     echo "3) Tijdelijke SSH Key genereren (voor GitHub)"
     echo "4) Project scaffolding (Mappenstructuur genereren)"
     echo "5) Handige Terminal Aliassen instellen"
-    echo "6) Alles in één keer uitvoeren (opties 1, 2, 3 en 5)"
-    echo "7) Afsluiten"
+    echo "6) Standaardbrowser instellen op Google Chrome"
+    echo "7) Alles in één keer uitvoeren (opties 1, 2, 3, 5 en 6)"
+    echo "8) Afsluiten"
     echo ""
 }
 
@@ -71,7 +72,7 @@ toon_menu() {
 while true; do
     toon_menu
 
-    read "keuze?> Kies een optie (1-7): "
+    read "keuze?> Kies een optie (1-8): "
     echo ""
 
     case $keuze in
@@ -91,22 +92,26 @@ while true; do
             run_module "05-aliases.sh"
             ;;
         6)
+            run_module "06-default-browser.sh"
+            ;;
+        7)
             print_info "Alles-in-één modus gestart..."
             echo ""
             run_module "01-git-config.sh"
             run_module "02-vscode-extensions.sh"
             run_module "03-ssh-keygen.sh"
             run_module "05-aliases.sh"
+            run_module "06-default-browser.sh"
             echo ""
             print_success "Setup voltooid!"
             print_info "Project scaffolding (optie 4) moet je per project apart aanroepen."
             ;;
-        7)
+        8)
             echo "Tot ziens! 👋"
             break
             ;;
         *)
-            print_error "Ongeldige optie: ${keuze}. Kies een nummer van 1 tot en met 7."
+            print_error "Ongeldige optie: ${keuze}. Kies een nummer van 1 tot en met 8."
             ;;
     esac
 
