@@ -10,9 +10,9 @@
 # die mappen te wijzigen – geen scriptkennis nodig.
 # =============================================================================
 
-source "${0:A:h:h}/lib/helpers.sh"
+REPO_ROOT="${0:A:h:h}"               # Absoluut pad naar de repo-root
+source "$REPO_ROOT/lib/helpers.sh"
 
-REPO_ROOT=$(get_repo_root)           # Hoofdmap van deze repository
 TEMPLATES_DIR="$REPO_ROOT/templates" # Map met alle template-projecten
 
 # -----------------------------------------------------------------------------

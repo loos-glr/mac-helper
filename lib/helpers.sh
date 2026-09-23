@@ -135,7 +135,8 @@ confirm_yes_no() {
 #   Werkt ook als het script vanuit een submap wordt aangeroepen.
 # -----------------------------------------------------------------------------
 get_repo_root() {
-    echo "${0:A:h:h}"
+    local helpers_file="${(%):-%x}"
+    echo "${helpers_file:A:h:h}"
 }
 
 # -----------------------------------------------------------------------------
