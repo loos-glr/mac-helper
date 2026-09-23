@@ -14,35 +14,44 @@ jobs:
 
       - name: Install dependencies
         run: |
+          set -x
           sudo apt-get update
           sudo apt-get install -y shellcheck zsh
           wget -qO /usr/local/bin/shfmt https://github.com/mvdan/sh/releases/download/v3.8.0/shfmt_v3.8.0_linux_amd64
           chmod +x /usr/local/bin/shfmt
+          echo "STEP_INSTALL_OK"
 
       - name: Run ShellCheck
         run: |
+          set -x
           shellcheck --shell=bash --severity=warning \
             --exclude=SC2296,SC2154,SC2034,SC2162,SC1090,SC1091,SC2088 \
             setup.sh \
             lib/helpers.sh \
             modules/*.sh
+          echo "STEP_SHELLCHECK_OK"
 
       - name: Check formatting with shfmt
         run: |
+          set -x
           shfmt -d -i 4 \
             setup.sh \
             lib/helpers.sh \
             modules/*.sh
+          echo "STEP_SHFMT_OK"
 
       - name: Zsh syntax check
         run: |
+          set -x
           for f in setup.sh lib/helpers.sh modules/*.sh; do
             echo "Checking: $f"
             zsh -n "$f" || { echo "Syntax error in $f"; exit 1; }
           done
+          echo "STEP_ZSH_OK"
 
       - name: Check for trailing newlines
         run: |
+          set -x
           missing_nl=0
           for f in setup.sh lib/helpers.sh modules/*.sh; do
             if [ -s "$f" ] && [ "$(tail -c1 "$f" | wc -l)" -eq 0 ]; then
@@ -50,4 +59,5 @@ jobs:
               missing_nl=1
             fi
           done
+          echo "STEP_NEWLINES_OK (missing=$missing_nl)"
           exit $missing_nl
