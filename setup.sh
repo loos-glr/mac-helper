@@ -155,3 +155,23 @@ while true; do
     echo ""
     read "pauze? Druk op Enter om terug te gaan naar het hoofdmenu..."
 done
+
+# -----------------------------------------------------------------------------
+# Na het afsluiten: bied aan om de shell opnieuw te laden als er
+# aliassen in ~/.zshrc staan, zodat ze direct beschikbaar zijn.
+# -----------------------------------------------------------------------------
+if [[ -f "$HOME/.zshrc" ]] && grep -q "^alias " "$HOME/.zshrc" 2>/dev/null; then
+    echo ""
+    echo "${BLAUW}────────────────────────────────────────────${GEEN_KLEUR}"
+    print_info "Er staan aliassen in ~/.zshrc."
+    echo ""
+    if confirm_yes_no "Wil je de terminal opnieuw laden zodat je aliassen direct kunt gebruiken?"; then
+        echo ""
+        print_info "Terminal wordt opnieuw geladen..."
+        sleep 1
+        exec zsh -l
+    fi
+    echo ""
+    print_info "Tip: type later 'source ~/.zshrc' om de aliassen te laden."
+    echo "${BLAUW}────────────────────────────────────────────${GEEN_KLEUR}"
+fi
