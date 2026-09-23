@@ -50,7 +50,33 @@ validate_non_empty "$email" "E-mailadres"
 
 
 # -----------------------------------------------------------------------------
-# Stap 3 – Pas de globale Git-configuratie toe
+# Stap 3 – Controleer of ~/.gitconfig schrijfbaar is
+# -----------------------------------------------------------------------------
+print_info "Controleren of Git-configuratie schrijfbaar is..."
+
+gitconfig_writable=1
+if [[ -f "$HOME/.gitconfig" ]]; then
+    [[ -w "$HOME/.gitconfig" ]] || gitconfig_writable=0
+else
+    [[ -w "$HOME" ]] || gitconfig_writable=0
+fi
+
+if [[ $gitconfig_writable -eq 0 ]]; then
+    echo ""
+    print_warning "~/.gitconfig is niet schrijfbaar (netwerk-homedir of beperkt account?)."
+    print_info "Voer deze commando's uit in elk project waar je Git gebruikt:"
+    echo ""
+    echo "  cd jouw-project"
+    echo "  git config user.name \"$naam\""
+    echo "  git config user.email \"$email\""
+    echo ""
+    print_info "Of vraag je docent/systeembeheerder om hulp."
+    exit 1
+fi
+
+
+# -----------------------------------------------------------------------------
+# Stap 4 – Pas de globale Git-configuratie toe
 # -----------------------------------------------------------------------------
 print_info "Git-configuratie toepassen..."
 

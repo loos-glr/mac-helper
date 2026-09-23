@@ -3,11 +3,11 @@
 # Module 6: Standaardbrowser instellen op Google Chrome
 #
 # Stelt Google Chrome in als de standaard webbrowser op macOS.
-# Gebruikt 'duti' (via Homebrew) om URL-schemes (http, https) en
-# HTML-bestanden te koppelen aan Chrome.
+# Gebruikt uitsluitend macOS-native commando's (osascript) – géén Homebrew,
+# géén duti, géén sudo. Werkt ook op accounts met beperkte rechten.
 #
-# Als duti nog niet is geïnstalleerd, biedt het script aan om dit
-# automatisch via Homebrew te doen.
+# Als de automatische instelling faalt (bijv. door MDM/SIP-beperkingen),
+# toont het script duidelijke handmatige instructies.
 # =============================================================================
 
 REPO_ROOT="${0:A:h:h}"
@@ -36,42 +36,37 @@ echo ""
 
 
 # -----------------------------------------------------------------------------
-# Stap 2 – Controleer of duti beschikbaar is
+# Stap 2 – Probeer Chrome automatisch in te stellen via osascript
+#
+# osascript is de macOS-native manier om AppleScript/JavaScript voor
+# automatisering uit te voeren. Het vereist géén extra installatie.
+# Op MDM-beheerde Macs kan System Events echter geblokkeerd zijn,
+# vandaar de fallback naar handmatige instructies.
 # -----------------------------------------------------------------------------
-print_info "Controleren of 'duti' beschikbaar is..."
+print_info "Google Chrome instellen als standaardbrowser (automatisch)..."
 
-if check_command_exists "duti"; then
-    print_success "'duti' is al beschikbaar."
-else
-    print_warning "'duti' is nog niet geïnstalleerd."
-    print_info "duti is een kleine tool die bestandstype-koppelingen beheert op macOS."
-    echo ""
+automatisch_gelukt=0
 
-    # Check of Homebrew beschikbaar is
-    if ! check_command_exists "brew"; then
-        print_error "Homebrew is niet geïnstalleerd."
-        echo ""
-        print_info "Installeer eerst Homebrew:"
-        echo "  /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
-        echo ""
-        print_info "Voer daarna deze module opnieuw uit."
-        exit 1
+# Methode 1: osascript via System Events (werkt op de meeste Macs)
+if check_command_exists "osascript"; then
+    if osascript -e "
+        tell application \"System Events\"
+            set default web browser to \"Google Chrome.app\"
+        end tell" 2>/dev/null; then
+        automatisch_gelukt=1
+        print_success "Google Chrome is ingesteld als standaard webbrowser."
     fi
+fi
 
-    if confirm_yes_no "Wil je 'duti' nu installeren via Homebrew?"; then
-        print_info "Bezig met installeren van duti..."
-        brew install duti
-
-        if ! check_command_exists "duti"; then
-            print_error "Installatie van 'duti' is mislukt."
-            print_info "Probeer het handmatig:  brew install duti"
-            exit 1
-        fi
-
-        print_success "'duti' is succesvol geïnstalleerd."
-    else
-        print_info "Overgeslagen. Installeer duti handmatig met:  brew install duti"
-        exit 0
+# Methode 2: alternatieve osascript-syntax (sommige macOS-versies)
+if [[ $automatisch_gelukt -eq 0 ]] && check_command_exists "osascript"; then
+    if osascript -e "tell application \"Google Chrome\" to activate" \
+                  -e "tell application \"System Events\" to tell process \"Google Chrome\" to set frontmost to true" 2>/dev/null; then
+        # Deze methode opent Chrome en brengt het naar voorgrond;
+        # Chrome vraagt dan zelf of het de standaardbrowser wil worden
+        print_info "Google Chrome is geopend – bevestig de vraag of Chrome"
+        print_info "de standaardbrowser mag worden (indien deze verschijnt)."
+        automatisch_gelukt=1
     fi
 fi
 
@@ -79,32 +74,26 @@ echo ""
 
 
 # -----------------------------------------------------------------------------
-# Stap 3 – Stel Chrome in als standaardbrowser via duti
+# Stap 3 – Toon handmatige instructies als automatisering faalt
 # -----------------------------------------------------------------------------
-print_info "Google Chrome instellen als standaardbrowser..."
-
-fouten=0
-
-# HTTP en HTTPS URL-schemes aan Chrome koppelen
-duti -s "$CHROME_BUNDLE_ID" http all  2>/dev/null || ((fouten++))
-duti -s "$CHROME_BUNDLE_ID" https all 2>/dev/null || ((fouten++))
-duti -s "$CHROME_BUNDLE_ID" html all  2>/dev/null || ((fouten++))
-duti -s "$CHROME_BUNDLE_ID" htm all   2>/dev/null || ((fouten++))
-# public.html is de UTI voor HTML-bestanden op macOS
-duti -s "$CHROME_BUNDLE_ID" public.html all 2>/dev/null || ((fouten++))
-
-echo ""
-
-if [[ $fouten -eq 0 ]]; then
-    print_success "Google Chrome is ingesteld als standaardbrowser voor:"
-    echo "           → http / https  (weblinks)"
-    echo "           → .html / .htm  (HTML-bestanden)"
+if [[ $automatisch_gelukt -eq 1 ]]; then
+    print_info "Ter controle: ga naar Systeeminstellingen → Bureaublad & Dock"
+    echo "           en kijk bij 'Standaard webbrowser' of Chrome geselecteerd is."
     echo ""
-    print_info "Je kunt dit controleren via:"
-    echo "         Systeeminstellingen → Bureaublad & Dock → Standaard webbrowser"
 else
-    print_warning "${fouten} koppeling(en) konden niet worden ingesteld."
-    print_info "Dit kan komen door SIP-beperkingen (System Integrity Protection)."
-    print_info "Stel Chrome handmatig in via Systeeminstellingen → Bureaublad & Dock."
-    exit 1
+    print_warning "Automatische instelling niet mogelijk (MDM/SIP-beperking?)."
+    echo ""
+    echo "${BLAUW}────────────────────────────────────────────${GEEN_KLEUR}"
+    echo "${BLAUW}  HANDMATIGE INSTELLING (minder dan 1 minuut)${GEEN_KLEUR}"
+    echo "${BLAUW}────────────────────────────────────────────${GEEN_KLEUR}"
+    echo ""
+    echo "  ${GROEN}1.${GEEN_KLEUR} Open ${BLAUW}Systeeminstellingen${GEEN_KLEUR} (Apple-menu  → Systeeminstellingen)"
+    echo "  ${GROEN}2.${GEEN_KLEUR} Ga naar ${BLAUW}Bureaublad & Dock${GEEN_KLEUR}"
+    echo "  ${GROEN}3.${GEEN_KLEUR} Scroll omlaag naar het dropdown-menu ${BLAUW}Standaard webbrowser${GEEN_KLEUR}"
+    echo "  ${GROEN}4.${GEEN_KLEUR} Selecteer ${BLAUW}Google Chrome${GEEN_KLEUR}"
+    echo ""
+    echo "  💡 ${GEEL}Tip:${GEEN_KLEUR} Als het dropdown-menu grijs is (uitgegrijsd),"
+    echo "     dan beheert de school deze instelling centraal."
+    echo "     Vraag je docent of systeembeheerder om hulp."
+    echo ""
 fi

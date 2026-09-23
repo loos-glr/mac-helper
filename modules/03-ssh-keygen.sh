@@ -69,31 +69,50 @@ fi
 
 
 # ------------------------------------------------------------------
-# Stap 3 – Start de SSH-agent en voeg de sleutel toe
+# Stap 3 – Start de SSH-agent en voeg de sleutel toe (optioneel)
 # ------------------------------------------------------------------
 print_info "SSH-agent starten en sleutel toevoegen..."
 
-eval "$(ssh-agent -s)" > /dev/null 2>&1
+agent_ok=0
+if agent_output=$(ssh-agent -s 2>/dev/null); then
+    eval "$agent_output" > /dev/null 2>&1
 
-if ssh-add "$SSH_KEY_PATH" 2>/dev/null; then
-    print_success "SSH-sleutel toegevoegd aan de agent."
-else
-    print_error "Kon de SSH-sleutel niet toevoegen aan de agent."
-    exit 1
+    if ssh-add "$SSH_KEY_PATH" 2>/dev/null; then
+        print_success "SSH-sleutel toegevoegd aan de agent."
+        agent_ok=1
+    fi
+fi
+
+if [[ $agent_ok -eq 0 ]]; then
+    print_warning "SSH-agent kon niet gestart worden (sandbox-/MDM-beperking?)."
+    echo ""
+    print_info "Je kunt de sleutel handmatig gebruiken door deze regel toe"
+    print_info "te voegen aan ~/.ssh/config (maak het bestand aan als het niet bestaat):"
+    echo ""
+    echo "  Host github.com"
+    echo "      HostName github.com"
+    echo "      IdentityFile ${SSH_KEY_PATH}"
+    echo "      User git"
+    echo ""
 fi
 
 
 # ------------------------------------------------------------------
-# Stap 4 – Kopieer de public key naar het klembord (macOS)
+# Stap 4 – Toon de public key
+#         (probeert pbcopy, anders tonen we de tekst direct)
 # ------------------------------------------------------------------
-print_info "Public key naar klembord kopiëren..."
+print_info "Public key beschikbaar maken..."
 
-if pbcopy < "$SSH_KEY_PATH.pub"; then
-    print_success "Public key staat op je klembord!"
+if pbcopy < "$SSH_KEY_PATH.pub" 2>/dev/null; then
+    print_success "Public key staat op je klembord (Cmd+V om te plakken)!"
 else
-    print_error "Kon de public key niet naar het klembord kopiëren."
-    print_info "Je kunt hem handmatig openen met: cat ${SSH_KEY_PATH}.pub"
-    exit 1
+    print_info "Klembord niet beschikbaar (sandbox-beperking?)."
+    print_info "Hier is je public key – selecteer en kopieer handmatig (Cmd+C):"
+    echo ""
+    echo "${BLAUW}────────────────────────────────────────────${GEEN_KLEUR}"
+    cat "$SSH_KEY_PATH.pub"
+    echo "${BLAUW}────────────────────────────────────────────${GEEN_KLEUR}"
+    echo ""
 fi
 
 echo ""

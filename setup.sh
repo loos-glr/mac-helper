@@ -18,6 +18,40 @@ source "$SCRIPT_DIR/lib/helpers.sh"
 
 
 # -----------------------------------------------------------------------------
+# check_omgeving
+#   Voert een snelle gezondheidscheck uit en waarschuwt de gebruiker
+#   als bepaalde tools of directories niet beschikbaar zijn.
+# -----------------------------------------------------------------------------
+check_omgeving() {
+    local waarschuwingen=0
+
+    if ! check_command_exists "code"; then
+        print_warning "VS Code CLI niet in PATH – extensies worden naar bestand geschreven."
+        ((waarschuwingen++))
+    fi
+
+    if [[ ! -d "$HOME/Desktop" || ! -w "$HOME/Desktop" ]]; then
+        print_warning "Desktop niet schrijfbaar – projecten/aliassen worden elders opgeslagen."
+        ((waarschuwingen++))
+    fi
+
+    if [[ -f "$HOME/.gitconfig" && ! -w "$HOME/.gitconfig" ]]; then
+        print_warning "~/.gitconfig is read-only – Git-configuratie alleen per project mogelijk."
+        ((waarschuwingen++))
+    fi
+
+    if [[ $waarschuwingen -gt 0 ]]; then
+        echo ""
+        print_info "Je werkt in een beperkte omgeving. De scripts zijn hierop aangepast"
+        print_info "en bieden fallback-opties waar nodig."
+        echo ""
+    fi
+
+    return $waarschuwingen
+}
+
+
+# -----------------------------------------------------------------------------
 # run_module <module-pad>
 #   Roept een module-script aan binnen dezelfde Zsh-sessie.
 #   Toont de exitcode als deze niet 0 is, zodat de gebruiker weet
@@ -67,8 +101,15 @@ toon_menu() {
 
 
 # -----------------------------------------------------------------------------
-# Hoofdloop – blijft tonen tot de gebruiker kiest voor afsluiten (optie 7)
+# Hoofdloop – blijft tonen tot de gebruiker kiest voor afsluiten (optie 8)
+#
+# Voer eerst een omgevingscheck uit zodat de gebruiker weet of er
+# beperkingen zijn voordat hij/zij modules gaat uitvoeren.
 # -----------------------------------------------------------------------------
+check_omgeving
+echo ""
+read "pauze?> Druk op Enter om door te gaan naar het menu..."
+
 while true; do
     toon_menu
 

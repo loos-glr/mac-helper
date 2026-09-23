@@ -37,7 +37,21 @@ if [[ ! "$projectnaam" =~ ^[a-zA-Z0-9_-]+$ ]]; then
     exit 1
 fi
 
-DOEL_DIR="$HOME/Desktop/$projectnaam"
+# Bepaal de doelmap – probeer eerst Desktop, anders huidige map of /tmp
+if [[ -d "$HOME/Desktop" && -w "$HOME/Desktop" ]]; then
+    DOEL_DIR="$HOME/Desktop/$projectnaam"
+else
+    print_warning "Desktop niet beschikbaar of niet schrijfbaar."
+    if [[ -w "$PWD" ]]; then
+        DOEL_DIR="$PWD/$projectnaam"
+        print_info "Project wordt aangemaakt in huidige map: ${DOEL_DIR}"
+    else
+        DOEL_DIR="/tmp/$projectnaam"
+        print_warning "Project wordt aangemaakt in /tmp (tijdelijk!): ${DOEL_DIR}"
+        print_warning "LET OP: /tmp wordt gewist bij herstart van de computer."
+    fi
+    echo ""
+fi
 
 
 # ------------------------------------------------------------------
