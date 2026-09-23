@@ -160,10 +160,10 @@ done
 # Na het afsluiten: bied aan om de shell opnieuw te laden als er
 # aliassen in ~/.zshrc staan, zodat ze direct beschikbaar zijn.
 # -----------------------------------------------------------------------------
-if [[ -f "$HOME/.zshrc" ]] && grep -q "^alias " "$HOME/.zshrc" 2>/dev/null; then
+if [[ -f "$HOME/.glr_aliases" ]] || { [[ -f "$HOME/.zshrc" ]] && grep -q "^alias " "$HOME/.zshrc" 2>/dev/null; }; then
     echo ""
     echo "${BLAUW}────────────────────────────────────────────${GEEN_KLEUR}"
-    print_info "Er staan aliassen in ~/.zshrc."
+    print_info "Er staan aliassen klaar in je home-directory."
     echo ""
     if confirm_yes_no "Wil je de terminal opnieuw laden zodat je aliassen direct kunt gebruiken?"; then
         echo ""
@@ -172,6 +172,10 @@ if [[ -f "$HOME/.zshrc" ]] && grep -q "^alias " "$HOME/.zshrc" 2>/dev/null; then
         exec zsh -l
     fi
     echo ""
-    print_info "Tip: type later 'source ~/.zshrc' om de aliassen te laden."
+    if [[ -f "$HOME/.glr_aliases" ]]; then
+        print_info "Tip: type later 'source ~/.glr_aliases' om de aliassen te laden."
+    else
+        print_info "Tip: type later 'source ~/.zshrc' om de aliassen te laden."
+    fi
     echo "${BLAUW}────────────────────────────────────────────${GEEN_KLEUR}"
 fi
