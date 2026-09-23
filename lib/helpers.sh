@@ -147,3 +147,42 @@ confirm_yes_no() {
 get_repo_root() {
     echo "${0:A:h:h}"
 }
+
+
+# -----------------------------------------------------------------------------
+# get_env_file
+#   Retourneert het pad naar het .env-bestand in de repository-root,
+#   of een lege string als het bestand niet bestaat.
+# -----------------------------------------------------------------------------
+get_env_file() {
+    local root
+    root=$(get_repo_root)
+    if [[ -f "$root/.env" ]]; then
+        echo "$root/.env"
+    fi
+}
+
+
+# -----------------------------------------------------------------------------
+# load_env_value <variabelenaam>
+#   Leest een enkele waarde uit het .env-bestand (indien aanwezig) en
+#   retourneert deze. Retourneert een lege string als het bestand niet
+#   bestaat of de variabele niet gevonden is.
+#
+#   Gebruik:
+#     naam=$(load_env_value "NAME")
+#     if [[ -n "$naam" ]]; then ... fi
+# -----------------------------------------------------------------------------
+load_env_value() {
+    local var_naam="$1"
+    local env_file
+    env_file=$(get_env_file)
+
+    if [[ -z "$env_file" ]]; then
+        return
+    fi
+
+    grep -E "^${var_naam}=" "$env_file" 2>/dev/null \
+        | head -1 \
+        | sed 's/^[^=]*=["'"'"']*//;s/["'"'"']*$//'
+}

@@ -51,12 +51,27 @@ dotconfig/
 4. **Volg de stappen** in het interactieve keuzemenu.
 
 ### Optioneel: `.env` aanmaken
-Kopieer `.env.example` naar `.env` en vul je naam en e-mail in:
+Kopieer `.env.example` naar `.env` en vul je naam, e-mail en eventueel je
+eigen VS Code-extensies in:
 ```bash
 cp .env.example .env
 ```
-De Git-configuratiemodule (optie 1) leest dit bestand automatisch en gebruikt
-de waarden als standaardantwoord. Zo hoef je niet elke keer opnieuw te typen.
+De Git-configuratiemodule (optie 1) en de VS Code-extensiemodule (optie 2)
+lezen dit bestand automatisch en gebruiken de waarden als standaardantwoord.
+Zo hoef je niet elke keer opnieuw te typen.
+
+#### `.env`-variabelen
+
+| Variabele | Gebruikt door | Beschrijving |
+|---|---|---|
+| `NAME` | `01-git-config.sh` | Je volledige naam (Git `user.name`) |
+| `EMAIL` | `01-git-config.sh` | Je (school) e-mailadres (Git `user.email`) |
+| `VSCODE_EXTENSIONS_JAAR1` | `02-vscode-extensions.sh` | Komma-gescheiden lijst met extensie-ID's voor Leerjaar 1 |
+| `VSCODE_EXTENSIONS_JAAR2` | `02-vscode-extensions.sh` | Komma-gescheiden lijst met extensie-ID's voor Leerjaar 2 |
+
+> **Tip:** Als je `VSCODE_EXTENSIONS_JAAR1` of `VSCODE_EXTENSIONS_JAAR2` leeg laat
+> (of het `.env`-bestand niet aanmaakt), gebruikt het script automatisch de
+> hardcoded standaardlijsten.
 
 ---
 

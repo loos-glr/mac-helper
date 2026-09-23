@@ -5,29 +5,54 @@
 # Installeert extensies voor Leerjaar 1 of Leerjaar 2 via de VS Code CLI.
 # Controleert eerst of de 'code'-opdracht beschikbaar is voordat er
 # iets geïnstalleerd wordt.
+#
+# De lijsten met extensie-ID's worden eerst uit het .env-bestand gelezen
+# (als komma-gescheiden strings). Als het .env-bestand niet bestaat of de
+# variabelen leeg zijn, wordt teruggevallen op de hardcoded standaardlijsten.
 # =============================================================================
 
-source "${0:A:h:h}/lib/helpers.sh"
+REPO_ROOT="${0:A:h:h}"                            # Absoluut pad naar de repo-root
+source "$REPO_ROOT/lib/helpers.sh"
 
 
 # -----------------------------------------------------------------------------
-# Lijsten met extensie-ID's – makkelijk uit te breiden door studenten
+# Laad extensies uit .env (indien aanwezig), anders fallback naar hardcoded
 # -----------------------------------------------------------------------------
 
-# Leerjaar 1: HTML/CSS, JavaScript, PHP
-readonly EXTENSIES_JAAR1=(
+# Probeer de waarden uit .env te lezen
+_ENV_JAAR1=$(load_env_value "VSCODE_EXTENSIONS_JAAR1")
+_ENV_JAAR2=$(load_env_value "VSCODE_EXTENSIONS_JAAR2")
+
+# Fallback – hardcoded standaardlijsten (gebruikt als .env geen waarde heeft)
+readonly FALLBACK_JAAR1=(
     "esbenp.prettier-vscode"                # Code formatter
     "ritwickdey.LiveServer"                 # Live-server voor HTML/CSS
     "bmewburn.vscode-intelephense-client"   # PHP-intelligentie
 )
 
-# Leerjaar 2: Node.js, React, Laravel
-readonly EXTENSIES_JAAR2=(
+readonly FALLBACK_JAAR2=(
     "esbenp.prettier-vscode"                # Code formatter
     "dbaeumer.vscode-eslint"                # JavaScript-linting
     "dsznajder.es7-react-js-snippets"       # React-snippets
     "onecentlin.laravel-blade"              # Laravel Blade-syntax
 )
+
+# Bepaal de definitieve lijsten: .env-waarde splitsen op komma, anders fallback
+if [[ -n "$_ENV_JAAR1" ]]; then
+    EXTENSIES_JAAR1=("${(@s:,:)_ENV_JAAR1}")
+    print_info "Extensies Jaar 1 geladen uit .env"
+else
+    EXTENSIES_JAAR1=("${FALLBACK_JAAR1[@]}")
+    print_info "Extensies Jaar 1: standaardlijst gebruikt"
+fi
+
+if [[ -n "$_ENV_JAAR2" ]]; then
+    EXTENSIES_JAAR2=("${(@s:,:)_ENV_JAAR2}")
+    print_info "Extensies Jaar 2 geladen uit .env"
+else
+    EXTENSIES_JAAR2=("${FALLBACK_JAAR2[@]}")
+    print_info "Extensies Jaar 2: standaardlijst gebruikt"
+fi
 
 
 # -----------------------------------------------------------------------------

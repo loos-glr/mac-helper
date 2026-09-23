@@ -8,8 +8,8 @@
 # =============================================================================
 
 # Laad gedeelde helpers in (kleuren, validatie, etc.)
-source "${0:A:h:h}/lib/helpers.sh"                # ${0:A:h} = map van dit script
-REPO_ROOT=$(get_repo_root)                        # Absolute pad naar de repo-hoofdmap
+REPO_ROOT="${0:A:h:h}"                            # Absoluut pad naar de repo-root
+source "$REPO_ROOT/lib/helpers.sh"
 
 
 # -----------------------------------------------------------------------------
@@ -17,21 +17,14 @@ REPO_ROOT=$(get_repo_root)                        # Absolute pad naar de repo-ho
 # -----------------------------------------------------------------------------
 print_header "Git Configuratie"
 
-DEFAULT_NAME=""
-DEFAULT_EMAIL=""
+DEFAULT_NAME=$(load_env_value "NAME")
+DEFAULT_EMAIL=$(load_env_value "EMAIL")
 
-if [[ -f "$REPO_ROOT/.env" ]]; then
-    # Lees NAME en EMAIL uit .env zonder het bestand te sourcen
-    # (sourcen is riskant bij onbekende bestandsinhoud)
-    DEFAULT_NAME=$(grep -E '^NAME=' "$REPO_ROOT/.env" 2>/dev/null | head -1 | sed 's/^NAME=["'"'"']*//;s/["'"'"']*$//')
-    DEFAULT_EMAIL=$(grep -E '^EMAIL=' "$REPO_ROOT/.env" 2>/dev/null | head -1 | sed 's/^EMAIL=["'"'"']*//;s/["'"'"']*$//')
-
-    if [[ -n "$DEFAULT_NAME" && -n "$DEFAULT_EMAIL" ]]; then
-        print_info "Standaardwaarden gevonden in .env:"
-        echo "         Naam:  ${DEFAULT_NAME}"
-        echo "         Email: ${DEFAULT_EMAIL}"
-        echo ""
-    fi
+if [[ -n "$DEFAULT_NAME" && -n "$DEFAULT_EMAIL" ]]; then
+    print_info "Standaardwaarden gevonden in .env:"
+    echo "         Naam:  ${DEFAULT_NAME}"
+    echo "         Email: ${DEFAULT_EMAIL}"
+    echo ""
 fi
 
 
