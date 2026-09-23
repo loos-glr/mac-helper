@@ -11,9 +11,8 @@
 # variabelen leeg zijn, wordt teruggevallen op de hardcoded standaardlijsten.
 # =============================================================================
 
-REPO_ROOT="${0:A:h:h}"                            # Absoluut pad naar de repo-root
+REPO_ROOT="${0:A:h:h}" # Absoluut pad naar de repo-root
 source "$REPO_ROOT/lib/helpers.sh"
-
 
 # -----------------------------------------------------------------------------
 # Laad extensies uit .env (indien aanwezig), anders fallback naar hardcoded
@@ -25,16 +24,16 @@ _ENV_JAAR2=$(load_env_value "VSCODE_EXTENSIONS_JAAR2")
 
 # Fallback – hardcoded standaardlijsten (gebruikt als .env geen waarde heeft)
 readonly FALLBACK_JAAR1=(
-    "esbenp.prettier-vscode"                # Code formatter
-    "ritwickdey.LiveServer"                 # Live-server voor HTML/CSS
-    "bmewburn.vscode-intelephense-client"   # PHP-intelligentie
+    "esbenp.prettier-vscode"              # Code formatter
+    "ritwickdey.LiveServer"               # Live-server voor HTML/CSS
+    "bmewburn.vscode-intelephense-client" # PHP-intelligentie
 )
 
 readonly FALLBACK_JAAR2=(
-    "esbenp.prettier-vscode"                # Code formatter
-    "dbaeumer.vscode-eslint"                # JavaScript-linting
-    "dsznajder.es7-react-js-snippets"       # React-snippets
-    "onecentlin.laravel-blade"              # Laravel Blade-syntax
+    "esbenp.prettier-vscode"          # Code formatter
+    "dbaeumer.vscode-eslint"          # JavaScript-linting
+    "dsznajder.es7-react-js-snippets" # React-snippets
+    "onecentlin.laravel-blade"        # Laravel Blade-syntax
 )
 
 # Bepaal de definitieve lijsten: .env-waarde splitsen op komma, anders fallback
@@ -54,7 +53,6 @@ else
     print_info "Extensies Jaar 2: standaardlijst gebruikt"
 fi
 
-
 # -----------------------------------------------------------------------------
 # find_vscode_cli
 #   Zoekt de VS Code CLI ('code') op meerdere bekende locaties.
@@ -62,7 +60,7 @@ fi
 # -----------------------------------------------------------------------------
 find_vscode_cli() {
     # Standaard: check PATH
-    if command -v code > /dev/null 2>&1; then
+    if command -v code >/dev/null 2>&1; then
         echo "code"
         return 0
     fi
@@ -77,7 +75,6 @@ find_vscode_cli() {
     return 1
 }
 
-
 # -----------------------------------------------------------------------------
 # install_extensions <vs-code-cmd> <extensies-array>
 #   Installeert één voor één de opgegeven extensies en toont per extensie
@@ -90,14 +87,13 @@ install_extensions() {
 
     for extensie in "${extensies[@]}"; do
         print_info "Installeren: ${extensie} ..."
-        if "$vs_code_cmd" --install-extension "$extensie" > /dev/null 2>&1; then
+        if "$vs_code_cmd" --install-extension "$extensie" >/dev/null 2>&1; then
             print_success "${extensie}"
         else
             print_error "${extensie} – installatie mislukt"
         fi
     done
 }
-
 
 # -----------------------------------------------------------------------------
 # write_extensions_to_file <leerjaar-label> <extensies-array>
@@ -131,12 +127,11 @@ write_extensions_to_file() {
         done
         echo ""
         echo "=========================================="
-    } > "$output_file"
+    } >"$output_file"
 
     print_success "Extensielijst opgeslagen op je bureaublad:"
     echo "           vscode-extensies-${leerjaar// /-}.txt"
 }
-
 
 # -----------------------------------------------------------------------------
 # Hoofdprogramma
@@ -167,26 +162,26 @@ if [[ -z "$VSC_CLI" ]]; then
     read "jaar_keuze? Voor welk leerjaar wil je de extensielijst opslaan? (1-3): "
 
     case $jaar_keuze in
-        1)
-            echo ""
-            write_extensions_to_file "Leerjaar 1" "${EXTENSIES_JAAR1[@]}"
-            echo ""
-            print_info "Tip: open VS Code en installeer de extensies één voor één."
-            print_info "     Of vraag je docent of VS Code met de CLI geïnstalleerd kan worden."
-            ;;
-        2)
-            echo ""
-            write_extensions_to_file "Leerjaar 2" "${EXTENSIES_JAAR2[@]}"
-            echo ""
-            print_info "Tip: open VS Code en installeer de extensies één voor één."
-            print_info "     Of vraag je docent of VS Code met de CLI geïnstalleerd kan worden."
-            ;;
-        3)
-            print_info "Geannuleerd."
-            ;;
-        *)
-            print_error "Ongeldige keuze (${jaar_keuze}). Afgebroken."
-            ;;
+    1)
+        echo ""
+        write_extensions_to_file "Leerjaar 1" "${EXTENSIES_JAAR1[@]}"
+        echo ""
+        print_info "Tip: open VS Code en installeer de extensies één voor één."
+        print_info "     Of vraag je docent of VS Code met de CLI geïnstalleerd kan worden."
+        ;;
+    2)
+        echo ""
+        write_extensions_to_file "Leerjaar 2" "${EXTENSIES_JAAR2[@]}"
+        echo ""
+        print_info "Tip: open VS Code en installeer de extensies één voor één."
+        print_info "     Of vraag je docent of VS Code met de CLI geïnstalleerd kan worden."
+        ;;
+    3)
+        print_info "Geannuleerd."
+        ;;
+    *)
+        print_error "Ongeldige keuze (${jaar_keuze}). Afgebroken."
+        ;;
     esac
 
     exit 0
@@ -201,26 +196,26 @@ echo ""
 read "jaar_keuze? Voor welk leerjaar wil je extensies installeren? (1-3): "
 
 case $jaar_keuze in
-    1)
-        echo ""
-        print_info "Extensies voor Leerjaar 1 worden geïnstalleerd..."
-        echo ""
-        install_extensions "$VSC_CLI" "${EXTENSIES_JAAR1[@]}"
-        echo ""
-        print_success "Klaar met het installeren van de Leerjaar 1-extensies!"
-        ;;
-    2)
-        echo ""
-        print_info "Extensies voor Leerjaar 2 worden geïnstalleerd..."
-        echo ""
-        install_extensions "$VSC_CLI" "${EXTENSIES_JAAR2[@]}"
-        echo ""
-        print_success "Klaar met het installeren van de Leerjaar 2-extensies!"
-        ;;
-    3)
-        print_info "Installatie geannuleerd."
-        ;;
-    *)
-        print_error "Ongeldige keuze (${jaar_keuze}). Installatie afgebroken."
-        ;;
+1)
+    echo ""
+    print_info "Extensies voor Leerjaar 1 worden geïnstalleerd..."
+    echo ""
+    install_extensions "$VSC_CLI" "${EXTENSIES_JAAR1[@]}"
+    echo ""
+    print_success "Klaar met het installeren van de Leerjaar 1-extensies!"
+    ;;
+2)
+    echo ""
+    print_info "Extensies voor Leerjaar 2 worden geïnstalleerd..."
+    echo ""
+    install_extensions "$VSC_CLI" "${EXTENSIES_JAAR2[@]}"
+    echo ""
+    print_success "Klaar met het installeren van de Leerjaar 2-extensies!"
+    ;;
+3)
+    print_info "Installatie geannuleerd."
+    ;;
+*)
+    print_error "Ongeldige keuze (${jaar_keuze}). Installatie afgebroken."
+    ;;
 esac

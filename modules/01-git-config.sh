@@ -8,18 +8,16 @@
 # =============================================================================
 
 # Laad gedeelde helpers in (kleuren, validatie, etc.)
-REPO_ROOT="${0:A:h:h}"                            # Absoluut pad naar de repo-root
+REPO_ROOT="${0:A:h:h}" # Absoluut pad naar de repo-root
 source "$REPO_ROOT/lib/helpers.sh"
-
 
 # -----------------------------------------------------------------------------
 # Stap 1 – Bepaal naam en e-mail (.env → Git-configuratie)
 # -----------------------------------------------------------------------------
 print_header "Git Configuratie"
 
-DEFAULT_NAME=$(resolve_default "NAME"  "user.name")
+DEFAULT_NAME=$(resolve_default "NAME" "user.name")
 DEFAULT_EMAIL=$(resolve_default "EMAIL" "user.email")
-
 
 # -----------------------------------------------------------------------------
 # Stap 2 – Gebruik bekende waarden of vraag de gebruiker om invoer
@@ -45,9 +43,8 @@ naam="${naam:-$DEFAULT_NAME}"
 email="${email:-$DEFAULT_EMAIL}"
 
 # Valideer dat beide velden zijn ingevuld
-validate_non_empty "$naam"  "Naam"
+validate_non_empty "$naam" "Naam"
 validate_non_empty "$email" "E-mailadres"
-
 
 # -----------------------------------------------------------------------------
 # Stap 3 – Controleer of ~/.gitconfig schrijfbaar is
@@ -74,15 +71,14 @@ if [[ $gitconfig_writable -eq 0 ]]; then
     exit 1
 fi
 
-
 # -----------------------------------------------------------------------------
 # Stap 4 – Pas de globale Git-configuratie toe
 # -----------------------------------------------------------------------------
 print_info "Git-configuratie toepassen..."
 
-if git config --global user.name "$naam" \
-    && git config --global user.email "$email" \
-    && git config --global init.defaultBranch main; then
+if git config --global user.name "$naam" &&
+    git config --global user.email "$email" &&
+    git config --global init.defaultBranch main; then
 
     print_success "Git is geconfigureerd met:"
     echo ""

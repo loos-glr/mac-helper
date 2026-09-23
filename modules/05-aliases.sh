@@ -12,7 +12,6 @@
 
 source "${0:A:h:h}/lib/helpers.sh"
 
-
 # -----------------------------------------------------------------------------
 # Configuratie – voeg hier je eigen aliassen toe
 # -----------------------------------------------------------------------------
@@ -67,13 +66,12 @@ add_alias() {
     local alias_regel="$1"
 
     if ! grep -Fxq "$alias_regel" "$ZSHRC_FILE"; then
-        echo "$alias_regel" >> "$ZSHRC_FILE"
+        echo "$alias_regel" >>"$ZSHRC_FILE"
         print_success "Toegevoegd: ${alias_regel}"
     else
         print_info "Bestaat al: ${alias_regel} (overgeslagen)"
     fi
 }
-
 
 # -----------------------------------------------------------------------------
 # Hoofdprogramma

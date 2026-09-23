@@ -12,13 +12,11 @@ set -euo pipefail
 
 source "${0:A:h:h}/lib/helpers.sh"
 
-
 # -----------------------------------------------------------------------------
 # Configuratie – pas deze waarden aan als je een ander pad wilt
 # -----------------------------------------------------------------------------
 readonly SSH_KEY_PATH="$HOME/.ssh/id_ed25519_glr_tmp"
 readonly SSH_KEY_COMMENT="glr-dev-setup-tijdelijk"
-
 
 # -----------------------------------------------------------------------------
 # Hoofdprogramma
@@ -38,7 +36,6 @@ fi
 
 validate_non_empty "$email" "E-mailadres"
 
-
 # ------------------------------------------------------------------
 # Stap 1 – Controleer of er al een sleutel met deze naam bestaat
 # ------------------------------------------------------------------
@@ -53,7 +50,6 @@ if [[ -f "$SSH_KEY_PATH" ]]; then
     fi
 fi
 
-
 # ------------------------------------------------------------------
 # Stap 2 – Genereer een nieuwe Ed25519-sleutel (zonder wachtwoordzin)
 # ------------------------------------------------------------------
@@ -67,7 +63,6 @@ else
     exit 1
 fi
 
-
 # ------------------------------------------------------------------
 # Stap 3 – Start de SSH-agent en voeg de sleutel toe (optioneel)
 # ------------------------------------------------------------------
@@ -75,7 +70,7 @@ print_info "SSH-agent starten en sleutel toevoegen..."
 
 agent_ok=0
 if agent_output=$(ssh-agent -s 2>/dev/null); then
-    eval "$agent_output" > /dev/null 2>&1
+    eval "$agent_output" >/dev/null 2>&1
 
     if ssh-add "$SSH_KEY_PATH" 2>/dev/null; then
         print_success "SSH-sleutel toegevoegd aan de agent."
@@ -96,14 +91,13 @@ if [[ $agent_ok -eq 0 ]]; then
     echo ""
 fi
 
-
 # ------------------------------------------------------------------
 # Stap 4 – Toon de public key
 #         (probeert pbcopy, anders tonen we de tekst direct)
 # ------------------------------------------------------------------
 print_info "Public key beschikbaar maken..."
 
-if pbcopy < "$SSH_KEY_PATH.pub" 2>/dev/null; then
+if pbcopy <"$SSH_KEY_PATH.pub" 2>/dev/null; then
     print_success "Public key staat op je klembord (Cmd+V om te plakken)!"
 else
     print_info "Klembord niet beschikbaar (sandbox-beperking?)."

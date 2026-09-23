@@ -12,15 +12,13 @@
 
 source "${0:A:h:h}/lib/helpers.sh"
 
-REPO_ROOT=$(get_repo_root)               # Hoofdmap van deze repository
-TEMPLATES_DIR="$REPO_ROOT/templates"      # Map met alle template-projecten
-
+REPO_ROOT=$(get_repo_root)           # Hoofdmap van deze repository
+TEMPLATES_DIR="$REPO_ROOT/templates" # Map met alle template-projecten
 
 # -----------------------------------------------------------------------------
 # Hoofdprogramma
 # -----------------------------------------------------------------------------
 print_header "Project Scaffolding"
-
 
 # ------------------------------------------------------------------
 # Stap 1 – Vraag de projectnaam en valideer deze
@@ -53,7 +51,6 @@ else
     echo ""
 fi
 
-
 # ------------------------------------------------------------------
 # Stap 2 – Controleer of de doelmap al bestaat
 # ------------------------------------------------------------------
@@ -64,7 +61,6 @@ if check_dir_exists "$DOEL_DIR"; then
         exit 0
     fi
 fi
-
 
 # ------------------------------------------------------------------
 # Stap 3 – Vraag het projecttype
@@ -77,53 +73,52 @@ echo ""
 
 read "type_keuze? Typ het nummer van je keuze (1-3): "
 
-
 # ------------------------------------------------------------------
 # Stap 4 – Kopieer het juiste template
 # ------------------------------------------------------------------
 case $type_keuze in
-    1)
-        print_info "HTML/CSS/JS-template kopiëren naar ${DOEL_DIR} ..."
+1)
+    print_info "HTML/CSS/JS-template kopiëren naar ${DOEL_DIR} ..."
 
-        if [[ ! -d "$TEMPLATES_DIR/html-basis" ]]; then
-            print_error "Template 'html-basis' niet gevonden in ${TEMPLATES_DIR}"
-            exit 1
-        fi
-
-        # Kopieer de volledige template-map naar de doelmap
-        cp -R "$TEMPLATES_DIR/html-basis/" "$DOEL_DIR"
-
-        print_success "Basis HTML/CSS/JS-project aangemaakt in: ${DOEL_DIR}"
-        echo ""
-        echo "Structuur:"
-        find "$DOEL_DIR" -not -path '*/.gitkeep' | sed "s|$DOEL_DIR|  .|" | sort
-        ;;
-
-    2)
-        print_info "PHP-template kopiëren naar ${DOEL_DIR} ..."
-
-        if [[ ! -d "$TEMPLATES_DIR/php-basis" ]]; then
-            print_error "Template 'php-basis' niet gevonden in ${TEMPLATES_DIR}"
-            exit 1
-        fi
-
-        # Kopieer de volledige template-map naar de doelmap
-        cp -R "$TEMPLATES_DIR/php-basis/" "$DOEL_DIR"
-
-        print_success "PHP-project aangemaakt in: ${DOEL_DIR}"
-        echo ""
-        echo "Structuur:"
-        find "$DOEL_DIR" -not -path '*/.gitkeep' | sed "s|$DOEL_DIR|  .|" | sort
-        ;;
-
-    3)
-        print_info "Scaffolding geannuleerd. Er zijn geen bestanden aangemaakt."
-        ;;
-
-    *)
-        print_error "Ongeldige keuze (${type_keuze}). Scaffolding afgebroken."
+    if [[ ! -d "$TEMPLATES_DIR/html-basis" ]]; then
+        print_error "Template 'html-basis' niet gevonden in ${TEMPLATES_DIR}"
         exit 1
-        ;;
+    fi
+
+    # Kopieer de volledige template-map naar de doelmap
+    cp -R "$TEMPLATES_DIR/html-basis/" "$DOEL_DIR"
+
+    print_success "Basis HTML/CSS/JS-project aangemaakt in: ${DOEL_DIR}"
+    echo ""
+    echo "Structuur:"
+    find "$DOEL_DIR" -not -path '*/.gitkeep' | sed "s|$DOEL_DIR|  .|" | sort
+    ;;
+
+2)
+    print_info "PHP-template kopiëren naar ${DOEL_DIR} ..."
+
+    if [[ ! -d "$TEMPLATES_DIR/php-basis" ]]; then
+        print_error "Template 'php-basis' niet gevonden in ${TEMPLATES_DIR}"
+        exit 1
+    fi
+
+    # Kopieer de volledige template-map naar de doelmap
+    cp -R "$TEMPLATES_DIR/php-basis/" "$DOEL_DIR"
+
+    print_success "PHP-project aangemaakt in: ${DOEL_DIR}"
+    echo ""
+    echo "Structuur:"
+    find "$DOEL_DIR" -not -path '*/.gitkeep' | sed "s|$DOEL_DIR|  .|" | sort
+    ;;
+
+3)
+    print_info "Scaffolding geannuleerd. Er zijn geen bestanden aangemaakt."
+    ;;
+
+*)
+    print_error "Ongeldige keuze (${type_keuze}). Scaffolding afgebroken."
+    exit 1
+    ;;
 esac
 
 echo ""

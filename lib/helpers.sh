@@ -16,8 +16,7 @@ readonly GROEN='\033[0;32m'
 readonly BLAUW='\033[0;34m'
 readonly ROOD='\033[0;31m'
 readonly GEEL='\033[0;33m'
-readonly GEEN_KLEUR='\033[0m'          # Reset alle opmaak (No Color)
-
+readonly GEEN_KLEUR='\033[0m' # Reset alle opmaak (No Color)
 
 # -----------------------------------------------------------------------------
 # print_success <bericht>
@@ -26,7 +25,6 @@ readonly GEEN_KLEUR='\033[0m'          # Reset alle opmaak (No Color)
 print_success() {
     echo "${GROEN}✓ ${*}${GEEN_KLEUR}"
 }
-
 
 # -----------------------------------------------------------------------------
 # print_error <bericht>
@@ -37,7 +35,6 @@ print_error() {
     echo "${ROOD}✗ ${*}${GEEN_KLEUR}" >&2
 }
 
-
 # -----------------------------------------------------------------------------
 # print_info <bericht>
 #   Toont een blauw "→" met het opgegeven bericht. Geschikt voor
@@ -47,7 +44,6 @@ print_info() {
     echo "${BLAUW}→ ${*}${GEEN_KLEUR}"
 }
 
-
 # -----------------------------------------------------------------------------
 # print_warning <bericht>
 #   Toont een geel "⚠" met het opgegeven bericht. Gebruik dit voor
@@ -56,7 +52,6 @@ print_info() {
 print_warning() {
     echo "${GEEL}⚠ ${*}${GEEN_KLEUR}" >&2
 }
-
 
 # -----------------------------------------------------------------------------
 # print_header <titel>
@@ -69,7 +64,6 @@ print_header() {
     echo "${BLAUW}────────────────────────────────────────────${GEEN_KLEUR}"
     echo ""
 }
-
 
 # -----------------------------------------------------------------------------
 # check_command_exists <commando>
@@ -85,9 +79,8 @@ print_header() {
 #     fi
 # -----------------------------------------------------------------------------
 check_command_exists() {
-    command -v "$1" > /dev/null 2>&1
+    command -v "$1" >/dev/null 2>&1
 }
-
 
 # -----------------------------------------------------------------------------
 # validate_non_empty <waarde> <veldnaam>
@@ -104,7 +97,6 @@ validate_non_empty() {
     fi
 }
 
-
 # -----------------------------------------------------------------------------
 # check_dir_exists <pad>
 #   Controleert of een map al bestaat. Geeft 0 (true) terug als dat zo is.
@@ -117,7 +109,6 @@ validate_non_empty() {
 check_dir_exists() {
     [[ -d "$1" ]]
 }
-
 
 # -----------------------------------------------------------------------------
 # confirm_yes_no <vraag>
@@ -133,11 +124,10 @@ confirm_yes_no() {
     local antwoord
     read "antwoord? ${*} (j/n): "
     case "${(L)antwoord}" in
-        j|ja|y|yes) return 0 ;;
-        *)          return 1 ;;
+    j | ja | y | yes) return 0 ;;
+    *) return 1 ;;
     esac
 }
-
 
 # -----------------------------------------------------------------------------
 # get_repo_root
@@ -147,7 +137,6 @@ confirm_yes_no() {
 get_repo_root() {
     echo "${0:A:h:h}"
 }
-
 
 # -----------------------------------------------------------------------------
 # get_env_file
@@ -161,7 +150,6 @@ get_env_file() {
         echo "$root/.env"
     fi
 }
-
 
 # -----------------------------------------------------------------------------
 # load_env_value <variabelenaam>
@@ -182,11 +170,10 @@ load_env_value() {
         return
     fi
 
-    grep -E "^${var_naam}=" "$env_file" 2>/dev/null \
-        | head -1 \
-        | sed 's/^[^=]*=["'"'"']*//;s/["'"'"']*$//'
+    grep -E "^${var_naam}=" "$env_file" 2>/dev/null |
+        head -1 |
+        sed 's/^[^=]*=["'"'"']*//;s/["'"'"']*$//'
 }
-
 
 # -----------------------------------------------------------------------------
 # resolve_default <env_variabele> <git-sleutel>

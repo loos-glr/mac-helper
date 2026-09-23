@@ -13,9 +13,8 @@
 # =============================================================================
 
 # Laad de gedeelde helpers (kleurdefinities, validatie-functies)
-SCRIPT_DIR="${0:A:h}"                         # Map waarin setup.sh zelf staat
+SCRIPT_DIR="${0:A:h}" # Map waarin setup.sh zelf staat
 source "$SCRIPT_DIR/lib/helpers.sh"
-
 
 # -----------------------------------------------------------------------------
 # check_omgeving
@@ -50,7 +49,6 @@ check_omgeving() {
     return $waarschuwingen
 }
 
-
 # -----------------------------------------------------------------------------
 # run_module <module-pad>
 #   Roept een module-script aan binnen dezelfde Zsh-sessie.
@@ -77,7 +75,6 @@ run_module() {
     return $exitcode
 }
 
-
 # -----------------------------------------------------------------------------
 # toon_menu
 #   Tekent het hoofdmenu op het scherm.
@@ -99,7 +96,6 @@ toon_menu() {
     echo ""
 }
 
-
 # -----------------------------------------------------------------------------
 # Hoofdloop – blijft tonen tot de gebruiker kiest voor afsluiten (optie 8)
 #
@@ -117,43 +113,43 @@ while true; do
     echo ""
 
     case $keuze in
-        1)
-            run_module "01-git-config.sh"
-            ;;
-        2)
-            run_module "02-vscode-extensions.sh"
-            ;;
-        3)
-            run_module "03-ssh-keygen.sh"
-            ;;
-        4)
-            run_module "04-scaffolding.sh"
-            ;;
-        5)
-            run_module "05-aliases.sh"
-            ;;
-        6)
-            run_module "06-default-browser.sh"
-            ;;
-        7)
-            print_info "Alles-in-één modus gestart..."
-            echo ""
-            run_module "01-git-config.sh"
-            run_module "02-vscode-extensions.sh"
-            run_module "03-ssh-keygen.sh"
-            run_module "05-aliases.sh"
-            run_module "06-default-browser.sh"
-            echo ""
-            print_success "Setup voltooid!"
-            print_info "Project scaffolding (optie 4) moet je per project apart aanroepen."
-            ;;
-        8)
-            echo "Tot ziens! 👋"
-            break
-            ;;
-        *)
-            print_error "Ongeldige optie: ${keuze}. Kies een nummer van 1 tot en met 8."
-            ;;
+    1)
+        run_module "01-git-config.sh"
+        ;;
+    2)
+        run_module "02-vscode-extensions.sh"
+        ;;
+    3)
+        run_module "03-ssh-keygen.sh"
+        ;;
+    4)
+        run_module "04-scaffolding.sh"
+        ;;
+    5)
+        run_module "05-aliases.sh"
+        ;;
+    6)
+        run_module "06-default-browser.sh"
+        ;;
+    7)
+        print_info "Alles-in-één modus gestart..."
+        echo ""
+        run_module "01-git-config.sh"
+        run_module "02-vscode-extensions.sh"
+        run_module "03-ssh-keygen.sh"
+        run_module "05-aliases.sh"
+        run_module "06-default-browser.sh"
+        echo ""
+        print_success "Setup voltooid!"
+        print_info "Project scaffolding (optie 4) moet je per project apart aanroepen."
+        ;;
+    8)
+        echo "Tot ziens! 👋"
+        break
+        ;;
+    *)
+        print_error "Ongeldige optie: ${keuze}. Kies een nummer van 1 tot en met 8."
+        ;;
     esac
 
     echo ""

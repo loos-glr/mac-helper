@@ -18,7 +18,6 @@ CHROME_BUNDLE_ID="com.google.Chrome"
 
 print_header "Standaardbrowser – Google Chrome"
 
-
 # -----------------------------------------------------------------------------
 # Stap 1 – Controleer of Google Chrome is geïnstalleerd
 # -----------------------------------------------------------------------------
@@ -33,7 +32,6 @@ fi
 
 print_success "Google Chrome gevonden."
 echo ""
-
 
 # -----------------------------------------------------------------------------
 # Stap 2 – Probeer Chrome automatisch in te stellen via osascript
@@ -61,7 +59,7 @@ fi
 # Methode 2: alternatieve osascript-syntax (sommige macOS-versies)
 if [[ $automatisch_gelukt -eq 0 ]] && check_command_exists "osascript"; then
     if osascript -e "tell application \"Google Chrome\" to activate" \
-                  -e "tell application \"System Events\" to tell process \"Google Chrome\" to set frontmost to true" 2>/dev/null; then
+        -e "tell application \"System Events\" to tell process \"Google Chrome\" to set frontmost to true" 2>/dev/null; then
         # Deze methode opent Chrome en brengt het naar voorgrond;
         # Chrome vraagt dan zelf of het de standaardbrowser wil worden
         print_info "Google Chrome is geopend – bevestig de vraag of Chrome"
@@ -71,7 +69,6 @@ if [[ $automatisch_gelukt -eq 0 ]] && check_command_exists "osascript"; then
 fi
 
 echo ""
-
 
 # -----------------------------------------------------------------------------
 # Stap 3 – Toon handmatige instructies als automatisering faalt
