@@ -1,28 +1,16 @@
-# dotconfig
+# GLR Creative Software Developer - Mac Setup
 
-Quick shell scripts for bootstrapping personal dotfiles and dev environment settings.
+Welkom bij de GLR Dev Setup! Omdat de iMacs op school na het uitloggen worden gereset, ben je vaak veel tijd kwijt aan het opnieuw instellen van je werkomgeving. Met deze scripts automatiseren we dat.
 
-## Quick start
+Dit project is modulair opgebouwd. Dat betekent dat elke taak zijn eigen script heeft in de map `modules/`. Voel je vrij om de code te lezen, te leren hoe het werkt en je eigen aanpassingen te doen!
 
-```sh
-cp .env.example .env
-```
+## Hoe gebruik je dit?
 
-Edit .env file with your name and email
+1. Open je terminal (Zsh).
+2. Navigeer naar de map waar je dit project hebt opgeslagen (bijv. je OneDrive of HDD).
+3. Voer het hoofdscript uit met:
+   `zsh setup.sh`
+4. Volg de stappen in het keuzemenu.
 
-```
-sh configure-git.sh
-```
-
-## Files
-
-| File | Purpose |
-|---|---|
-| `.env.example` | Template for personal environment variables (NAME, EMAIL) |
-| `.gitignore` | Excludes `.env` to keep secrets local |
-| `configure-git.sh` | Sets global git `user.name` and `user.email` from `.env` |
-
-## Requirements
-
-- POSIX `sh`
-- `git`
+## Wat leren we hiervan?
+Automatisering is een kernonderdeel van het werk van een developer (DevOps). Door deze scripts te lezen, leer je over expliciete flow-control (while-loops en case-statements), shell scripting en user-level configuraties.
