@@ -33,7 +33,7 @@ if [[ -n "$DEFAULT_EMAIL" ]]; then
     print_info "E-mailadres al bekend – invoer overgeslagen: ${email}"
     echo ""
 else
-    read "email?> Voer je GitHub e-mailadres in: "
+    read "email? Voer je GitHub e-mailadres in: "
 fi
 
 validate_non_empty "$email" "E-mailadres"

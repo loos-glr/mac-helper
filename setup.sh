@@ -108,12 +108,12 @@ toon_menu() {
 # -----------------------------------------------------------------------------
 check_omgeving
 echo ""
-read "pauze?> Druk op Enter om door te gaan naar het menu..."
+read "pauze? Druk op Enter om door te gaan naar het menu..."
 
 while true; do
     toon_menu
 
-    read "keuze?> Kies een optie (1-8): "
+    read "keuze? Kies een optie (1-8): "
     echo ""
 
     case $keuze in
@@ -157,5 +157,5 @@ while true; do
     esac
 
     echo ""
-    read "pauze?> Druk op Enter om terug te gaan naar het hoofdmenu..."
+    read "pauze? Druk op Enter om terug te gaan naar het hoofdmenu..."
 done

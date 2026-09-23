@@ -131,7 +131,7 @@ check_dir_exists() {
 # -----------------------------------------------------------------------------
 confirm_yes_no() {
     local antwoord
-    read "antwoord?> ${*} (j/n): "
+    read "antwoord? ${*} (j/n): "
     case "${(L)antwoord}" in
         j|ja|y|yes) return 0 ;;
         *)          return 1 ;;

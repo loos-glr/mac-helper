@@ -25,7 +25,7 @@ print_header "Project Scaffolding"
 # ------------------------------------------------------------------
 # Stap 1 – Vraag de projectnaam en valideer deze
 # ------------------------------------------------------------------
-read "projectnaam?> Wat is de naam van je project? (gebruik een kebab-case naam zoals 'mijn-app'): "
+read "projectnaam? Wat is de naam van je project? (gebruik een kebab-case naam zoals 'mijn-app'): "
 
 # Valideer: projectnaam mag niet leeg zijn
 validate_non_empty "$projectnaam" "Projectnaam"
@@ -75,7 +75,7 @@ echo "2) PHP (met includes-structuur)"
 echo "3) Annuleren"
 echo ""
 
-read "type_keuze?> Typ het nummer van je keuze (1-3): "
+read "type_keuze? Typ het nummer van je keuze (1-3): "
 
 
 # ------------------------------------------------------------------

@@ -36,8 +36,8 @@ if [[ -n "$DEFAULT_NAME" && -n "$DEFAULT_EMAIL" ]]; then
     echo "         git config --global user.name \"Voornaam Achternaam\""
     echo "         git config --global user.email \"email@voorbeeld.nl\""
 else
-    read "naam?> Voer je volledige naam in (bijv. Voornaam Achternaam): "
-    read "email>? Voer je (school) e-mailadres in:                    "
+    read "naam? Voer je volledige naam in (bijv. Voornaam Achternaam): "
+    read "email? Voer je (school) e-mailadres in:                    "
 fi
 
 # Gebruik de standaardwaarden als fallback wanneer de gebruiker niets invult

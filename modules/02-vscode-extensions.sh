@@ -164,7 +164,7 @@ if [[ -z "$VSC_CLI" ]]; then
     echo "3) Annuleren"
     echo ""
 
-    read "jaar_keuze?> Voor welk leerjaar wil je de extensielijst opslaan? (1-3): "
+    read "jaar_keuze? Voor welk leerjaar wil je de extensielijst opslaan? (1-3): "
 
     case $jaar_keuze in
         1)
@@ -198,7 +198,7 @@ echo "2) Leerjaar 2 (Node, React, Laravel)"
 echo "3) Annuleren"
 echo ""
 
-read "jaar_keuze?> Voor welk leerjaar wil je extensies installeren? (1-3): "
+read "jaar_keuze? Voor welk leerjaar wil je extensies installeren? (1-3): "
 
 case $jaar_keuze in
     1)
