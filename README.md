@@ -1,5 +1,4 @@
 # GLR Creative Software Developer – iMac Setup
-# ==============================================
 
 Welkom bij de **GLR Dev Setup**! Omdat de iMacs op school na het
 uitloggen worden gereset, ben je vaak veel tijd kwijt aan het opnieuw
